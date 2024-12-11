@@ -4,10 +4,6 @@ import json
 from boto3.dynamodb.conditions import Key
 
 
-a = [2,5,'6']
-b = a / 5
-
-
 def lambda_handler(message, context):
 
     if ('pathParameters' not in message or
