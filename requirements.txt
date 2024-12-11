@@ -1,1 +1,3 @@
 boto3
+openzeppelin-cairo-contracts
+paddlepaddle
