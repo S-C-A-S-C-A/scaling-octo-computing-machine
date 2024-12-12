@@ -3,8 +3,12 @@ name: Python Static Analysis
 on: [pull_request]
 
 jobs:
-  pyright:
-    name: pyright
+  scan:
+    name: scan
     runs-on: ubuntu-latest
     steps:
-      - uses: jakebailey/pyright-action@v2
+      - name: Install MyPy
+        run: pip install mypy
+
+      - name: Run MyPy
+        run: mypy .
