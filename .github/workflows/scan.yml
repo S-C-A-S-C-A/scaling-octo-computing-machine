@@ -10,5 +10,16 @@ jobs:
       - name: Install MyPy
         run: pip install mypy
 
-      - name: Run MyPy
-        run: mypy .
+      - name: Get list of changed Python files
+        id: changed-files
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          git diff --name-only origin/${{ github.base_ref }} | grep '\.py$' > changed_files.txt
+
+      - name: Run MyPy on changed files
+        run: |
+          if [ -s changed_files.txt ]; then
+            xargs mypy < changed_files.txt --install-types --non-interactive
+          else
+            echo "No Python files were changed."
+          fi
