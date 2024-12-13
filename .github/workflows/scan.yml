@@ -7,9 +7,13 @@ jobs:
     name: scan
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
-    # - name: Checkout code
-    #   uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     # - name: Set up Python
     #   uses: actions/setup-python@v4
@@ -36,12 +40,13 @@ jobs:
     #       echo "No Python files were changed."
     #     fi
 
-    - uses: actions/checkout@v3
     - name: Check files using the black formatter
       uses: datadog/action-py-black-formatter@v2.1
       id: action_black
+
     - name: Annotate diff changes using reviewdog
       if: steps.action_black.outputs.is_formatted == 'true'
       uses: reviewdog/action-suggester@v1
       with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         tool_name: blackfmt
