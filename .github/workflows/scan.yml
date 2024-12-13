@@ -15,52 +15,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # - name: Set up Python
-    #   uses: actions/setup-python@v4
-    #   with:
-    #     python-version: '3.10'
-
-    # - name: Install dependencies
-    #   run: pip install -r requirements.txt
-
     - name: Install MyPy
       run: pip install mypy
-
-    # - name: Get list of changed Python files
-    #   id: changed-files
-    #   run: |
-    #     git fetch origin ${{ github.base_ref }} --depth=1
-    #     git diff --name-only origin/${{ github.base_ref }} | grep '\.py$' > changed_files.txt
-
-    # - name: Run MyPy on changed files
-    #   run: |
-    #     if [ -s changed_files.txt ]; then
-    #       xargs mypy < changed_files.txt --install-types --non-interactive
-    #     else
-    #       echo "No Python files were changed."
-    #     fi
 
     - uses: tsuyoshicho/action-mypy@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
         reporter: github-pr-review
-        # Change reporter level if you need.
-        # GitHub Status Check won't become failure with warning.
+        fail_on_error: true
         level: warning
-        # Change the current directory to run mypy command.
-        # mypy command reads setup.cfg or other settings file in this path.
         workdir: src
-
-
-    # ====================== THIS WORKS ======================
-    # - name: Check files using the black formatter
-    #   uses: datadog/action-py-black-formatter@v2.1
-    #   id: action_black
-
-    # - name: Annotate diff changes using reviewdog
-    #   if: steps.action_black.outputs.is_formatted == 'true'
-    #   uses: reviewdog/action-suggester@v1
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-    #     tool_name: blackfmt
