@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # - name: Set up Python
     #   uses: actions/setup-python@v4
@@ -40,13 +40,27 @@ jobs:
     #       echo "No Python files were changed."
     #     fi
 
-    - name: Check files using the black formatter
-      uses: datadog/action-py-black-formatter@v2.1
-      id: action_black
-
-    - name: Annotate diff changes using reviewdog
-      if: steps.action_black.outputs.is_formatted == 'true'
-      uses: reviewdog/action-suggester@v1
+    - uses: tsuyoshicho/action-mypy@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        tool_name: blackfmt
+        # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+        reporter: github-pr-review
+        # Change reporter level if you need.
+        # GitHub Status Check won't become failure with warning.
+        level: warning
+        # Change the current directory to run mypy command.
+        # mypy command reads setup.cfg or other settings file in this path.
+        workdir: src
+
+
+    # ====================== THIS WORKS ======================
+    # - name: Check files using the black formatter
+    #   uses: datadog/action-py-black-formatter@v2.1
+    #   id: action_black
+
+    # - name: Annotate diff changes using reviewdog
+    #   if: steps.action_black.outputs.is_formatted == 'true'
+    #   uses: reviewdog/action-suggester@v1
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    #     tool_name: blackfmt
