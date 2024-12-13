@@ -1,10 +1,6 @@
 name: Python Static Analysis
 
-# on: [pull_request]
-on:
-  pull_request:
-    paths:
-      - '*.py'
+on: [pull_request]
 
 jobs:
   scan:
