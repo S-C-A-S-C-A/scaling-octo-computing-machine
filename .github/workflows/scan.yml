@@ -11,7 +11,7 @@ jobs:
       - name: check
         uses: jpetrucciani/mypy-check@master
         with:
-          path: "*.py"
+          path: ""
 
     # - name: Checkout code
     #   uses: actions/checkout@v3
