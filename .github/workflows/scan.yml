@@ -7,19 +7,14 @@ jobs:
     name: scan
     runs-on: ubuntu-latest
 
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: read
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+    # - name: Checkout code
+    #   uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+    # - name: Set up Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.10'
 
     # - name: Install dependencies
     #   run: pip install -r requirements.txt
@@ -41,9 +36,12 @@ jobs:
     #       echo "No Python files were changed."
     #     fi
 
-
-    - uses: smelly-python/smell-my-pr@main
-      with: 
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        command: pipenv run smelly-python -d src
-        install-pipenv: true
+    - uses: actions/checkout@v3
+    - name: Check files using the black formatter
+      uses: datadog/action-py-black-formatter@v2.1
+      id: action_black
+    - name: Annotate diff changes using reviewdog
+      if: steps.action_black.outputs.is_formatted == 'true'
+      uses: reviewdog/action-suggester@v1
+      with:
+        tool_name: blackfmt
