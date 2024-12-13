@@ -7,6 +7,11 @@ jobs:
     name: scan
     runs-on: ubuntu-latest
 
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: read
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -19,8 +24,8 @@ jobs:
     # - name: Install dependencies
     #   run: pip install -r requirements.txt
 
-    - name: Install MyPy
-      run: pip install mypy
+    # - name: Install MyPy
+    #   run: pip install mypy
 
     # - name: Get list of changed Python files
     #   id: changed-files
@@ -37,14 +42,8 @@ jobs:
     #     fi
 
 
-    - uses: tsuyoshicho/action-mypy@v4
-      with:
-        github_token: ${{ secrets.github_token }}
-        # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
-        reporter: github-pr-review
-        # Change reporter level if you need.
-        # GitHub Status Check won't become failure with warning.
-        level: warning
-        # Change the current directory to run mypy command.
-        # mypy command reads setup.cfg or other settings file in this path.
-        workdir: src
+    - uses: smelly-python/smell-my-pr@main
+      with: 
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        command: pipenv run smelly-python -d src
+        install-pipenv: true
